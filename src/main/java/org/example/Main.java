@@ -43,6 +43,7 @@ public class Main {
         integerList.add(13);
         integerList.add(12);
 
+        integerList.quickSort(0, integerList.size() - 1);
         System.out.println(integerList.toString());
         integerList.sortInsertion();
         System.out.println(integerList.toString());
