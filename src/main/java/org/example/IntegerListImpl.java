@@ -8,11 +8,15 @@ import java.util.Arrays;
 
 public class IntegerListImpl implements IntegerList{
 
-    private final Integer[] integerList;
+    private Integer[] integerList;
     private int size;
+    private static final Integer[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {};
+    private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
+
+    private static final int DEFAULT_CAPACITY = 10;
 
     public IntegerListImpl() {
-        integerList = new Integer[10];
+        integerList = new Integer[DEFAULT_CAPACITY];
     }
 
     public IntegerListImpl(int size) {
@@ -21,8 +25,9 @@ public class IntegerListImpl implements IntegerList{
 
     @Override
     public Integer add(Integer item) {
-        validateSize();
         validateItem(item);
+        if (size == integerList.length)
+            integerList = grow();
 
         integerList[size++] = item;
         return item;
@@ -30,9 +35,10 @@ public class IntegerListImpl implements IntegerList{
 
     @Override
     public Integer add(int index, Integer item) {
-        validateSize();
         validateItem(item);
         validateIndex(index);
+        if (size == integerList.length)
+            integerList = grow();
 
         if(index == size) {
             integerList[size++] = item;
@@ -216,5 +222,62 @@ public class IntegerListImpl implements IntegerList{
             }
             swapElements(arr, i, minElementIndex);
         }
+    }
+
+    private Integer[] grow(int minCapacity) {
+        return integerList = Arrays.copyOf(integerList,
+                newCapacity(minCapacity));
+    }
+
+    private Integer[] grow() {
+        return grow((int)(size * 1.5));
+    }
+
+    private int newCapacity(int minCapacity) {
+        int oldCapacity = integerList.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        if (newCapacity - minCapacity <= 0) {
+            if (integerList == DEFAULTCAPACITY_EMPTY_ELEMENTDATA)
+                return Math.max(DEFAULT_CAPACITY, minCapacity);
+            if (minCapacity < 0) // overflow
+                throw new OutOfMemoryError();
+            return minCapacity;
+        }
+        return (newCapacity - MAX_ARRAY_SIZE <= 0)
+                ? newCapacity
+                : hugeCapacity(minCapacity);
+    }
+
+    private static int hugeCapacity(int minCapacity) {
+        if (minCapacity < 0) // overflow
+            throw new OutOfMemoryError();
+        return (minCapacity > MAX_ARRAY_SIZE)
+                ? Integer.MAX_VALUE
+                : MAX_ARRAY_SIZE;
+    }
+
+    public void quickSort(int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(integerList, begin, end);
+
+            quickSort(begin, partitionIndex - 1);
+            quickSort(partitionIndex + 1, end);
+        }
+    }
+
+    private int partition(Integer[] arr, int begin, int end) {
+        int pivot = arr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+
+                swapElements(arr, i, j);
+            }
+        }
+
+        swapElements(arr, i + 1, end);
+        return i + 1;
     }
 }

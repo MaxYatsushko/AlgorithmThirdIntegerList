@@ -65,21 +65,6 @@ class IntegerListImplTest {
         assertEquals(expectedError, exception.getMessage());
     }
 
-    @Test
-    public void addIndex_FullListException() {
-        //входные данные
-        Integer itemInteger = 9;
-        int index = 1;
-        integerList = new IntegerListImpl(1);
-        integerList.add(itemInteger);
-
-        //ожидаемый результат
-        String expectedError = "List is full";
-
-        //начало теста
-        Exception exception = assertThrows(FullListException.class, () -> integerList.add(index, itemInteger));
-        assertEquals(expectedError, exception.getMessage());
-    }
 
     @Test
     void addItem_success(){
@@ -99,21 +84,6 @@ class IntegerListImplTest {
         assertEquals(expectedInteger, actualString);
         assertEquals(integers[0] , integerList.toArray()[0]);
         assertArrayEquals(integers, actualStrings);
-    }
-    @Test
-    void addItem_FullListException(){
-        //входные данные
-        Integer itemInteger = 9;
-        int index = 1;
-        integerList = new IntegerListImpl(1);
-        integerList.add(itemInteger);
-
-        //ожидаемый результат
-        String expectedError = "List is full";
-
-        //начало теста
-        Exception exception = assertThrows(FullListException.class, () -> integerList.add(itemInteger));
-        assertEquals(expectedError, exception.getMessage());
     }
 
     @Test
@@ -308,12 +278,6 @@ class IntegerListImplTest {
         assertTrue(indexNotFound == actualIndex1);
     }
 
-    //    @Override
-    //    public Integer get(int index) {
-    //        validateIndex(index);
-    //        return integerList[index];
-    //    }
-
     @Test
     void get_success() {
         //входные данные
@@ -402,4 +366,31 @@ class IntegerListImplTest {
         assertArrayEquals(expectedIntegers, actualIntegers);
     }
 
+    @Test
+    void quickSort_success(){
+        //входные данные
+        integerList.add(3);
+        integerList.add(2);
+        integerList.add(1);
+        integerList.add(0);
+        integerList.add(-1);
+        integerList.add(9);
+        integerList.add(8);
+        integerList.add(333);
+        integerList.add(1);
+        integerList.add(155);
+        integerList.add(10);
+        integerList.add(13);
+        integerList.add(12);
+
+        //ожидаемый результат
+        Integer[] expectedIntegers = {-1, 0, 1, 1, 2, 3, 8, 9, 10, 12, 13, 155, 333};
+
+
+        //начало теста
+        integerList.quickSort(0, integerList.size() - 1);
+        Integer[] actualIntegers = integerList.toArray();
+        assertArrayEquals(expectedIntegers, actualIntegers);
+
+    }
 }
